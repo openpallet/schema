@@ -1,0 +1,886 @@
+{
+  "format": {
+    "name": "OpenPallet",
+    "version": "1.2"
+  },
+  "header": {
+    "name": "Juices mix 3 flavours 6 layers.json",
+    "created": "2026-09-30T08:00:00",
+    "producer": "PalletDesigner 73.121",
+    "checksum": "2347cce9"
+  },
+  "pallet": {
+    "name": "EUR1",
+    "type": "EUR1 1200 x 800",
+    "length": 1200,
+    "width": 800,
+    "height": 144
+  },
+  "product": {
+    "name": "Juice 6x1l",
+    "code": "102"
+  },
+  "summary": {
+    "mix": true,
+    "layers": 6,
+    "products": 96,
+    "moves": 78,
+    "slip_sheets": 0,
+    "height": 1404.0,
+    "mass": 624000
+  },
+  "product_types": [
+    {
+      "id": 1,
+      "name": "Apple",
+      "code": "21",
+      "color": "#6ab04c",
+      "length": 300,
+      "width": 200,
+      "height": 210,
+      "mass": 6500,
+      "label_sides": [
+        270
+      ],
+      "count": 36
+    },
+    {
+      "id": 2,
+      "name": "Orange",
+      "code": "22",
+      "color": "#f0932b",
+      "length": 300,
+      "width": 200,
+      "height": 210,
+      "mass": 6500,
+      "label_sides": [
+        270
+      ],
+      "count": 30
+    },
+    {
+      "id": 3,
+      "name": "Multivitamin",
+      "code": "23",
+      "color": "#c0392b",
+      "length": 300,
+      "width": 200,
+      "height": 210,
+      "mass": 6500,
+      "label_sides": [
+        270
+      ],
+      "count": 30
+    }
+  ],
+  "slip_sheet_types": [
+    {
+      "id": 1,
+      "thickness": 2.7
+    }
+  ],
+  "stack": [
+    {
+      "position": 0
+    },
+    {
+      "position": 1,
+      "layout": 1
+    },
+    {
+      "position": 2,
+      "layout": 1
+    },
+    {
+      "position": 3,
+      "layout": 1
+    },
+    {
+      "position": 4,
+      "layout": 1
+    },
+    {
+      "position": 5,
+      "layout": 1
+    },
+    {
+      "position": 6,
+      "layout": 1
+    }
+  ],
+  "layouts": [
+    {
+      "id": 1,
+      "moves": [
+        {
+          "placing_order": 1,
+          "products": [
+            {
+              "id": 1,
+              "orientation": 0,
+              "x": 0,
+              "y": 0,
+              "size_x": 300,
+              "size_y": 200,
+              "type": 3
+            },
+            {
+              "id": 6,
+              "orientation": 0,
+              "x": 300,
+              "y": 0,
+              "size_x": 300,
+              "size_y": 200,
+              "type": 3
+            }
+          ],
+          "x_min": 0,
+          "y_min": 0,
+          "x_max": 600,
+          "y_max": 200,
+          "x_middle": 300.0,
+          "y_middle": 100.0,
+          "size_x": 600,
+          "size_y": 200,
+          "gripper_pick_orientation": 0,
+          "gripper_place_orientation": 0,
+          "placing_direction": 900,
+          "gripper_align": 0,
+          "gripper_open_side": 270,
+          "products_at_pick": [
+            {
+              "product_id": 6,
+              "orientation": 0
+            },
+            {
+              "product_id": 1,
+              "orientation": 0
+            }
+          ]
+        },
+        {
+          "placing_order": 2,
+          "products": [
+            {
+              "id": 2,
+              "orientation": 270,
+              "x": 0,
+              "y": 200,
+              "size_x": 200,
+              "size_y": 300,
+              "type": 2
+            },
+            {
+              "id": 3,
+              "orientation": 270,
+              "x": 0,
+              "y": 500,
+              "size_x": 200,
+              "size_y": 300,
+              "type": 2
+            }
+          ],
+          "x_min": 0,
+          "y_min": 200,
+          "x_max": 200,
+          "y_max": 800,
+          "x_middle": 100.0,
+          "y_middle": 500.0,
+          "size_x": 200,
+          "size_y": 600,
+          "gripper_pick_orientation": 0,
+          "gripper_place_orientation": 90,
+          "placing_direction": 90,
+          "gripper_align": 0,
+          "gripper_open_side": 270,
+          "products_at_pick": [
+            {
+              "product_id": 3,
+              "orientation": 180
+            },
+            {
+              "product_id": 2,
+              "orientation": 180
+            }
+          ]
+        },
+        {
+          "placing_order": 3,
+          "products": [
+            {
+              "id": 4,
+              "orientation": 270,
+              "x": 200,
+              "y": 200,
+              "size_x": 200,
+              "size_y": 300,
+              "type": 3
+            }
+          ],
+          "x_min": 200,
+          "y_min": 200,
+          "x_max": 400,
+          "y_max": 500,
+          "x_middle": 300.0,
+          "y_middle": 350.0,
+          "size_x": 200,
+          "size_y": 300,
+          "gripper_pick_orientation": 0,
+          "gripper_place_orientation": 90,
+          "placing_direction": 45,
+          "gripper_align": 0,
+          "gripper_open_side": 90,
+          "products_at_pick": [
+            {
+              "product_id": 4,
+              "orientation": 180
+            }
+          ]
+        },
+        {
+          "placing_order": 4,
+          "products": [
+            {
+              "id": 5,
+              "orientation": 270,
+              "x": 200,
+              "y": 500,
+              "size_x": 200,
+              "size_y": 300,
+              "type": 1
+            }
+          ],
+          "x_min": 200,
+          "y_min": 500,
+          "x_max": 400,
+          "y_max": 800,
+          "x_middle": 300.0,
+          "y_middle": 650.0,
+          "size_x": 200,
+          "size_y": 300,
+          "gripper_pick_orientation": 0,
+          "gripper_place_orientation": 90,
+          "placing_direction": 45,
+          "gripper_align": 0,
+          "gripper_open_side": 90,
+          "products_at_pick": [
+            {
+              "product_id": 5,
+              "orientation": 180
+            }
+          ]
+        },
+        {
+          "placing_order": 5,
+          "products": [
+            {
+              "id": 7,
+              "orientation": 270,
+              "x": 400,
+              "y": 200,
+              "size_x": 200,
+              "size_y": 300,
+              "type": 1
+            }
+          ],
+          "x_min": 400,
+          "y_min": 200,
+          "x_max": 600,
+          "y_max": 500,
+          "x_middle": 500.0,
+          "y_middle": 350.0,
+          "size_x": 200,
+          "size_y": 300,
+          "gripper_pick_orientation": 0,
+          "gripper_place_orientation": 90,
+          "placing_direction": 45,
+          "gripper_align": 0,
+          "gripper_open_side": 90,
+          "products_at_pick": [
+            {
+              "product_id": 7,
+              "orientation": 180
+            }
+          ]
+        },
+        {
+          "placing_order": 6,
+          "products": [
+            {
+              "id": 8,
+              "orientation": 270,
+              "x": 400,
+              "y": 500,
+              "size_x": 200,
+              "size_y": 300,
+              "type": 2
+            }
+          ],
+          "x_min": 400,
+          "y_min": 500,
+          "x_max": 600,
+          "y_max": 800,
+          "x_middle": 500.0,
+          "y_middle": 650.0,
+          "size_x": 200,
+          "size_y": 300,
+          "gripper_pick_orientation": 0,
+          "gripper_place_orientation": 90,
+          "placing_direction": 45,
+          "gripper_align": 0,
+          "gripper_open_side": 90,
+          "products_at_pick": [
+            {
+              "product_id": 8,
+              "orientation": 180
+            }
+          ]
+        },
+        {
+          "placing_order": 7,
+          "products": [
+            {
+              "id": 9,
+              "orientation": 0,
+              "x": 600,
+              "y": 0,
+              "size_x": 300,
+              "size_y": 200,
+              "type": 3
+            }
+          ],
+          "x_min": 600,
+          "y_min": 0,
+          "x_max": 900,
+          "y_max": 200,
+          "x_middle": 750.0,
+          "y_middle": 100.0,
+          "size_x": 300,
+          "size_y": 200,
+          "gripper_pick_orientation": 0,
+          "gripper_place_orientation": 90,
+          "placing_direction": 0,
+          "gripper_align": 0,
+          "gripper_open_side": 90,
+          "products_at_pick": [
+            {
+              "product_id": 9,
+              "orientation": 270
+            }
+          ]
+        },
+        {
+          "placing_order": 8,
+          "products": [
+            {
+              "id": 10,
+              "orientation": 270,
+              "x": 600,
+              "y": 200,
+              "size_x": 200,
+              "size_y": 300,
+              "type": 2
+            }
+          ],
+          "x_min": 600,
+          "y_min": 200,
+          "x_max": 800,
+          "y_max": 500,
+          "x_middle": 700.0,
+          "y_middle": 350.0,
+          "size_x": 200,
+          "size_y": 300,
+          "gripper_pick_orientation": 0,
+          "gripper_place_orientation": 90,
+          "placing_direction": 45,
+          "gripper_align": 0,
+          "gripper_open_side": 90,
+          "products_at_pick": [
+            {
+              "product_id": 10,
+              "orientation": 180
+            }
+          ]
+        },
+        {
+          "placing_order": 9,
+          "products": [
+            {
+              "id": 11,
+              "orientation": 270,
+              "x": 600,
+              "y": 500,
+              "size_x": 200,
+              "size_y": 300,
+              "type": 1
+            }
+          ],
+          "x_min": 600,
+          "y_min": 500,
+          "x_max": 800,
+          "y_max": 800,
+          "x_middle": 700.0,
+          "y_middle": 650.0,
+          "size_x": 200,
+          "size_y": 300,
+          "gripper_pick_orientation": 0,
+          "gripper_place_orientation": 90,
+          "placing_direction": 45,
+          "gripper_align": 0,
+          "gripper_open_side": 90,
+          "products_at_pick": [
+            {
+              "product_id": 11,
+              "orientation": 180
+            }
+          ]
+        },
+        {
+          "placing_order": 10,
+          "products": [
+            {
+              "id": 12,
+              "orientation": 270,
+              "x": 800,
+              "y": 200,
+              "size_x": 200,
+              "size_y": 300,
+              "type": 1
+            },
+            {
+              "id": 13,
+              "orientation": 270,
+              "x": 800,
+              "y": 500,
+              "size_x": 200,
+              "size_y": 300,
+              "type": 1
+            }
+          ],
+          "x_min": 800,
+          "y_min": 200,
+          "x_max": 1000,
+          "y_max": 800,
+          "x_middle": 900.0,
+          "y_middle": 500.0,
+          "size_x": 200,
+          "size_y": 600,
+          "gripper_pick_orientation": 0,
+          "gripper_place_orientation": 90,
+          "placing_direction": 45,
+          "gripper_align": 0,
+          "gripper_open_side": 90,
+          "products_at_pick": [
+            {
+              "product_id": 13,
+              "orientation": 180
+            },
+            {
+              "product_id": 12,
+              "orientation": 180
+            }
+          ]
+        },
+        {
+          "placing_order": 11,
+          "products": [
+            {
+              "id": 14,
+              "orientation": 0,
+              "x": 900,
+              "y": 0,
+              "size_x": 300,
+              "size_y": 200,
+              "type": 1
+            }
+          ],
+          "x_min": 900,
+          "y_min": 0,
+          "x_max": 1200,
+          "y_max": 200,
+          "x_middle": 1050.0,
+          "y_middle": 100.0,
+          "size_x": 300,
+          "size_y": 200,
+          "gripper_pick_orientation": 0,
+          "gripper_place_orientation": 270,
+          "placing_direction": 315,
+          "gripper_align": 0,
+          "gripper_open_side": 270,
+          "products_at_pick": [
+            {
+              "product_id": 14,
+              "orientation": 90
+            }
+          ]
+        },
+        {
+          "placing_order": 12,
+          "products": [
+            {
+              "id": 15,
+              "orientation": 270,
+              "x": 1000,
+              "y": 200,
+              "size_x": 200,
+              "size_y": 300,
+              "type": 3
+            }
+          ],
+          "x_min": 1000,
+          "y_min": 200,
+          "x_max": 1200,
+          "y_max": 500,
+          "x_middle": 1100.0,
+          "y_middle": 350.0,
+          "size_x": 200,
+          "size_y": 300,
+          "gripper_pick_orientation": 0,
+          "gripper_place_orientation": 90,
+          "placing_direction": 45,
+          "gripper_align": 0,
+          "gripper_open_side": 90,
+          "products_at_pick": [
+            {
+              "product_id": 15,
+              "orientation": 180
+            }
+          ]
+        },
+        {
+          "placing_order": 13,
+          "products": [
+            {
+              "id": 16,
+              "orientation": 270,
+              "x": 1000,
+              "y": 500,
+              "size_x": 200,
+              "size_y": 300,
+              "type": 2
+            }
+          ],
+          "x_min": 1000,
+          "y_min": 500,
+          "x_max": 1200,
+          "y_max": 800,
+          "x_middle": 1100.0,
+          "y_middle": 650.0,
+          "size_x": 200,
+          "size_y": 300,
+          "gripper_pick_orientation": 0,
+          "gripper_place_orientation": 90,
+          "placing_direction": 45,
+          "gripper_align": 0,
+          "gripper_open_side": 90,
+          "products_at_pick": [
+            {
+              "product_id": 16,
+              "orientation": 180
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "gripper": {
+    "length": 600,
+    "width": 450,
+    "outline_relevant": true,
+    "group_length_min": 70,
+    "group_length_max": 600,
+    "group_width_min": 70,
+    "group_width_max": 400,
+    "approach_clearance": 120,
+    "allowed_pick_orientation": [
+      0
+    ],
+    "allowed_place_orientation": [
+      0,
+      90,
+      180,
+      270
+    ],
+    "allowed_open_side": [
+      90,
+      270
+    ],
+    "allowed_align": [
+      0
+    ]
+  },
+  "source": {
+    "stop": 180,
+    "allowed_product_orientation": [
+      0,
+      90,
+      180,
+      270
+    ]
+  },
+  "limits": {
+    "types": 3,
+    "layers": 64,
+    "layouts": 5,
+    "moves": 64,
+    "products": 14,
+    "name_length": 30,
+    "recipe_name_length": 90
+  },
+  "x-palletdesigner": {
+    "project_version": 2,
+    "settings_type": "Examples/Cartons",
+    "station": {
+      "max_length": 600,
+      "max_width": 400,
+      "min_length": 70,
+      "min_width": 70,
+      "reqSpace": 120,
+      "max_pall_height": 1800,
+      "max_carton_overhang": 30,
+      "max_pall_length": 1200,
+      "max_pall_width": 1200,
+      "max_pall_layers": 64,
+      "max_pall_placings": 64,
+      "max_pall_products": 14,
+      "max_pall_unique_layers": 5,
+      "max_type_mix": 3,
+      "max_string_recipe": 90,
+      "max_string_product": 30,
+      "max_product_height": 1800,
+      "max_product_length": 3000,
+      "max_product_width": 2000,
+      "gripper_length": 600,
+      "gripper_width": 450,
+      "gripper_dim_relevant": true,
+      "robot_cycle_time": 12.6,
+      "allowed_gripper_open_side": [
+        90,
+        270
+      ],
+      "allowed_gripper_align": [
+        0
+      ],
+      "allowed_box_pick_rotation": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "allowed_gripper_pick_rotation": [
+        0
+      ],
+      "allowed_gripper_place_rotation": [
+        0,
+        90,
+        180,
+        270
+      ]
+    },
+    "layouts": [
+      {
+        "id": 1,
+        "file_name": "Examples/2 Juices - flavour mix and order/Mix 3 flavours.json",
+        "file_path": "data\\placing\\Examples\\2 Juices - flavour mix and order\\Mix 3 flavours.json",
+        "settings": {
+          "poke_out_allowance": 0
+        },
+        "obstacles": [],
+        "placing_count": 13,
+        "greedy_group_count": 13,
+        "best_solution": {
+          "orientation": "Horizontal",
+          "corner": "left_top",
+          "placing_count": 13
+        },
+        "moves": [
+          {
+            "group_id": "line10_grp19",
+            "row_axis": "x",
+            "product_ids": [
+              1,
+              6
+            ],
+            "position_index": 0,
+            "gripper_rect": [
+              0,
+              0,
+              600,
+              450
+            ]
+          },
+          {
+            "group_id": "line1_grp2",
+            "row_axis": "y",
+            "product_ids": [
+              2,
+              3
+            ],
+            "position_index": 0,
+            "gripper_rect": [
+              -250,
+              200,
+              450,
+              600
+            ]
+          },
+          {
+            "group_id": "line2_11_grp4_25",
+            "row_axis": "any",
+            "product_ids": [
+              4
+            ],
+            "position_index": 1,
+            "gripper_rect": [
+              200,
+              200,
+              450,
+              600
+            ]
+          },
+          {
+            "group_id": "line2_12_grp5_31",
+            "row_axis": "any",
+            "product_ids": [
+              5
+            ],
+            "position_index": 1,
+            "gripper_rect": [
+              200,
+              500,
+              450,
+              600
+            ]
+          },
+          {
+            "group_id": "line4_11_grp7_26",
+            "row_axis": "any",
+            "product_ids": [
+              7
+            ],
+            "position_index": 1,
+            "gripper_rect": [
+              400,
+              200,
+              450,
+              600
+            ]
+          },
+          {
+            "group_id": "line4_12_grp8_32",
+            "row_axis": "any",
+            "product_ids": [
+              8
+            ],
+            "position_index": 1,
+            "gripper_rect": [
+              400,
+              500,
+              450,
+              600
+            ]
+          },
+          {
+            "group_id": "line5_10_grp9_22",
+            "row_axis": "any",
+            "product_ids": [
+              9
+            ],
+            "position_index": 1,
+            "gripper_rect": [
+              600,
+              0,
+              450,
+              600
+            ]
+          },
+          {
+            "group_id": "line6_11_grp10_27",
+            "row_axis": "any",
+            "product_ids": [
+              10
+            ],
+            "position_index": 1,
+            "gripper_rect": [
+              600,
+              200,
+              450,
+              600
+            ]
+          },
+          {
+            "group_id": "line6_12_grp11_33",
+            "row_axis": "any",
+            "product_ids": [
+              11
+            ],
+            "position_index": 1,
+            "gripper_rect": [
+              600,
+              500,
+              450,
+              600
+            ]
+          },
+          {
+            "group_id": "line7_grp13",
+            "row_axis": "y",
+            "product_ids": [
+              12,
+              13
+            ],
+            "position_index": 1,
+            "gripper_rect": [
+              800,
+              200,
+              450,
+              600
+            ]
+          },
+          {
+            "group_id": "line8_10_grp15_23",
+            "row_axis": "any",
+            "product_ids": [
+              14
+            ],
+            "position_index": 2,
+            "gripper_rect": [
+              900,
+              -400,
+              450,
+              600
+            ]
+          },
+          {
+            "group_id": "line9_11_grp16_29",
+            "row_axis": "any",
+            "product_ids": [
+              15
+            ],
+            "position_index": 1,
+            "gripper_rect": [
+              1000,
+              200,
+              450,
+              600
+            ]
+          },
+          {
+            "group_id": "line9_12_grp17_36",
+            "row_axis": "any",
+            "product_ids": [
+              16
+            ],
+            "position_index": 1,
+            "gripper_rect": [
+              1000,
+              500,
+              450,
+              600
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,1037 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://palletdesigner.com/schemas/openpallet-1.2.schema.json",
+  "title": "OpenPallet pallet project (PalletDesigner)",
+  "description": "One pallet recipe as an OpenPallet 1.2 file: the pallet, the product and its types, the slip sheet types, the stack, every robot move of each unique layer (layout), the gripper and the infeed, and the sizes of the controller's recipe structure; what only PalletDesigner needs is in `x-palletdesigner`. X runs along the pallet's `length`, Y along its `width`, from the corner (0, 0); Z counts from the top of the pallet deck. Every angle is a whole number of degrees counter-clockwise from up the drawing (0 up = -X, 90 left = -Y, 180 down = +X, 270 right = +Y). Every move has its approach and its gripper's open side: 900 for straight down from above and for a gripper without an open side, 999 for not assigned. Another value not set is a key left out, never null. The HMI panel loads the file into the PLC structure tRecipeData; the Siemens DATA_BLOCK, the CSV, the Excel workbook and the ST block carry the same values. A top-level key this schema does not name starts with `x-`.",
+  "type": "object",
+  "x-openpallet-version": "1.2",
+  "x-project-version": 2,
+  "properties": {
+    "format": {
+      "type": "object",
+      "description": "The marker of the file: OpenPallet 1.2 or a later 1.x. A later minor version adds optional keys only, so a reader of 1.2 reads it and skips the keys it does not know.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Always `OpenPallet`.",
+          "const": "OpenPallet"
+        },
+        "version": {
+          "type": "string",
+          "description": "Version of the OpenPallet format: 1.2 or a later 1.x; this schema is 1.2.",
+          "pattern": "^1\\.[0-9]+$"
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ]
+    },
+    "header": {
+      "type": "object",
+      "description": "Who wrote the file, when, and for which recipe.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The recipe name the PLC and the panel know the pallet by, with the `.json`; absent when the file has none.",
+          "x-plc": "sgName (Polish and Latin letters without marks)"
+        },
+        "created": {
+          "type": "string",
+          "description": "When the file was written, ISO 8601 local time without a zone."
+        },
+        "producer": {
+          "type": "string",
+          "description": "The program that wrote the file and its version (`PalletDesigner 73.0`)."
+        },
+        "checksum": {
+          "type": "string",
+          "description": "CRC-32 of the canonical document without this key (`x-palletdesigner` included), 8 hex digits; a mismatch is a warning.",
+          "pattern": "^[0-9a-f]{8}$"
+        }
+      },
+      "required": [
+        "created",
+        "producer",
+        "checksum"
+      ]
+    },
+    "pallet": {
+      "type": "object",
+      "description": "The empty pallet: the drawing area and the direction of X.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the pallet.",
+          "x-plc": "sPalletData.sgName"
+        },
+        "type": {
+          "type": "string",
+          "description": "Kind of pallet (`EUR1 1200 x 800`, `Custom` ...)."
+        },
+        "length": {
+          "type": "integer",
+          "description": "Size along X.",
+          "x-unit": "mm",
+          "x-plc": "sPalletData.u16Length",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "width": {
+          "type": "integer",
+          "description": "Size along Y.",
+          "x-unit": "mm",
+          "x-plc": "sPalletData.u16Width",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "height": {
+          "type": "integer",
+          "description": "Height of the empty pallet; the robot adds it to Z.",
+          "x-unit": "mm",
+          "x-plc": "sPalletData.u16Height",
+          "minimum": 0,
+          "maximum": 65535
+        }
+      },
+      "required": [
+        "name",
+        "type",
+        "length",
+        "width",
+        "height"
+      ]
+    },
+    "product": {
+      "type": "object",
+      "description": "The pallet's product (in a mix, the product the types are variants of).",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the product.",
+          "x-plc": "sProductData.sgName"
+        },
+        "code": {
+          "type": "string",
+          "description": "Number of the product, digits.",
+          "x-plc": "sProductData.i32Id (0..2147483647)"
+        }
+      },
+      "required": [
+        "name",
+        "code"
+      ]
+    },
+    "summary": {
+      "type": "object",
+      "description": "The totals of the pallet.",
+      "properties": {
+        "mix": {
+          "type": "boolean",
+          "description": "Layers made in the Mix tab (mixed product types).",
+          "x-plc": "sSummary.boIsMix"
+        },
+        "layers": {
+          "type": "integer",
+          "description": "Layers of the stack.",
+          "x-plc": "sSummary.u16LayerCount",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "products": {
+          "type": "integer",
+          "description": "Products on the pallet.",
+          "x-plc": "sSummary.u16ProductCount",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "moves": {
+          "type": "integer",
+          "description": "Robot moves on the pallet.",
+          "x-plc": "sSummary.u16PlacingCount",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "slip_sheets": {
+          "type": "integer",
+          "description": "Slip sheets in the stack.",
+          "minimum": 0
+        },
+        "height": {
+          "type": "number",
+          "description": "Height of the loaded pallet from the floor, the pallet and the slip sheets included, one decimal.",
+          "x-unit": "mm",
+          "x-plc": "sSummary.u16Height (tenths of a mm)",
+          "minimum": 0,
+          "maximum": 6553.5
+        },
+        "mass": {
+          "type": "integer",
+          "description": "Mass of the products.",
+          "x-unit": "g",
+          "x-plc": "sSummary.u32Weight",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      },
+      "required": [
+        "mix",
+        "layers",
+        "products",
+        "moves",
+        "height",
+        "mass"
+      ]
+    },
+    "product_types": {
+      "type": "array",
+      "description": "The product types on the pallet, in id order, each one in use: on a pallet not made in the Mix tab one type, id 1, the product itself; on a mix one per mix type. The PLC's product sizes are type 1's.",
+      "items": {
+        "type": "object",
+        "description": "One product type.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Number of the type, 1..`limits.types`; what a product's `type` refers to.",
+            "x-plc": "sProductData.asTypeData[id] (a mix)",
+            "minimum": 1,
+            "maximum": 255
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the type.",
+            "x-plc": "sProductData.asTypeData[n].sgName"
+          },
+          "code": {
+            "type": "string",
+            "description": "Number of the type, digits.",
+            "x-plc": "sProductData.asTypeData[n].i32Id"
+          },
+          "color": {
+            "type": "string",
+            "description": "Colour as #RRGGBB; absent on a pallet without mix types.",
+            "x-plc": "sProductData.asTypeData[n].w32Color (16#FFRRGGBB)",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "length": {
+            "type": "integer",
+            "description": "Size of the product along X at orientation 0.",
+            "x-unit": "mm",
+            "x-plc": "sProductData.u16Length (type 1)",
+            "minimum": 0,
+            "maximum": 65535
+          },
+          "width": {
+            "type": "integer",
+            "description": "Size of the product along Y at orientation 0.",
+            "x-unit": "mm",
+            "x-plc": "sProductData.u16Width (type 1)",
+            "minimum": 0,
+            "maximum": 65535
+          },
+          "height": {
+            "type": "integer",
+            "description": "Height of the product.",
+            "x-unit": "mm",
+            "x-plc": "sProductData.u16Height (type 1)",
+            "minimum": 0,
+            "maximum": 65535
+          },
+          "mass": {
+            "type": "integer",
+            "description": "Mass of one product.",
+            "x-unit": "g",
+            "x-plc": "sProductData.u32Weight (type 1)",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "label_sides": {
+            "type": "array",
+            "description": "Faces carrying a label, each named by the direction it looks at orientation 0, ascending.",
+            "items": {
+              "type": "integer",
+              "description": "A face: 0, 90, 180 or 270.",
+              "x-unit": "deg",
+              "enum": [
+                0,
+                90,
+                180,
+                270
+              ]
+            },
+            "uniqueItems": true,
+            "x-plc": "sProductData.b8LabelSides (type 1): bit n = face 90 n"
+          },
+          "count": {
+            "type": "integer",
+            "description": "Products of the type on the pallet.",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "code",
+          "length",
+          "width",
+          "height",
+          "mass"
+        ]
+      },
+      "minItems": 1
+    },
+    "slip_sheet_types": {
+      "type": "array",
+      "description": "The slip sheet types (a slip sheet: a sheet on the pallet deck, between layers or on top; not a pallet replacement), at most 10, ids unique; a type carries only its thickness.",
+      "items": {
+        "type": "object",
+        "description": "One slip sheet type.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Number of the type; what `stack[].slip_sheet` refers to.",
+            "x-plc": "sSpacerData.au16Thickness[id]",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "thickness": {
+            "type": "number",
+            "description": "How much the slip sheet raises the next layer, one decimal; rims or edges that carry no product do not count.",
+            "x-unit": "mm",
+            "x-plc": "sSpacerData.au16Thickness[id] (tenths of a mm)",
+            "minimum": 0,
+            "maximum": 1000
+          }
+        },
+        "required": [
+          "id",
+          "thickness"
+        ]
+      },
+      "maxItems": 10
+    },
+    "stack": {
+      "type": "array",
+      "description": "The stack from the bottom, one entry per position: 0 the pallet itself, then one per layer.",
+      "items": {
+        "type": "object",
+        "description": "One position of the stack.",
+        "properties": {
+          "position": {
+            "type": "integer",
+            "description": "Position: 0 the pallet, 1 the bottom layer.",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "layout": {
+            "type": "integer",
+            "description": "The layer's layout, by `layouts[].id`; absent at position 0.",
+            "x-plc": "au8LayerPositions[position]",
+            "minimum": 1,
+            "maximum": 255
+          },
+          "slip_sheet": {
+            "type": "integer",
+            "description": "The slip sheet type lying on top of this position (position 0: on the pallet deck), by `slip_sheet_types[].id`; absent = no slip sheet.",
+            "x-plc": "sSpacerData.ai8SpacerTypePositions[position] (absent: 0)",
+            "minimum": 1,
+            "maximum": 10
+          }
+        },
+        "required": [
+          "position"
+        ]
+      }
+    },
+    "layouts": {
+      "type": "array",
+      "description": "The unique layers, in id order, numbered by first use from the bottom.",
+      "items": {
+        "type": "object",
+        "description": "One unique layer and its robot moves.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Number of the layout, from 1.",
+            "x-plc": "asLayerData[id]",
+            "minimum": 1,
+            "maximum": 255
+          },
+          "moves": {
+            "type": "array",
+            "description": "The moves, in the order the robot makes them.",
+            "items": {
+              "type": "object",
+              "description": "One robot move: the group of products the gripper takes and places at once.",
+              "properties": {
+                "placing_order": {
+                  "type": "integer",
+                  "description": "Number of the move in the layer, from 1.",
+                  "minimum": 1
+                },
+                "products": {
+                  "type": "array",
+                  "description": "The products of the move, in placing order.",
+                  "items": {
+                    "type": "object",
+                    "description": "One product of the move, where it stands in the layer.",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "Number of the product in the layer, from 1.",
+                        "minimum": 0
+                      },
+                      "orientation": {
+                        "type": "integer",
+                        "description": "Orientation of the product on the pallet: the direction its face 0 looks, 0, 90, 180 or 270.",
+                        "x-unit": "deg",
+                        "enum": [
+                          0,
+                          90,
+                          180,
+                          270
+                        ]
+                      },
+                      "x": {
+                        "type": "integer",
+                        "description": "Smallest X of the product (its corner with the smaller X and Y).",
+                        "x-unit": "mm"
+                      },
+                      "y": {
+                        "type": "integer",
+                        "description": "Smallest Y of the product.",
+                        "x-unit": "mm"
+                      },
+                      "size_x": {
+                        "type": "integer",
+                        "description": "Extent along X as it stands.",
+                        "x-unit": "mm",
+                        "minimum": 0,
+                        "maximum": 65535
+                      },
+                      "size_y": {
+                        "type": "integer",
+                        "description": "Extent along Y as it stands.",
+                        "x-unit": "mm",
+                        "minimum": 0,
+                        "maximum": 65535
+                      },
+                      "type": {
+                        "type": "integer",
+                        "description": "Product type of the product, by `product_types[].id`; absent on a pallet without mix types.",
+                        "x-plc": "asLayerData[].asPlacing[].ai8Btype[] (in picking order)",
+                        "minimum": 1,
+                        "maximum": 255
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "orientation",
+                      "x",
+                      "y",
+                      "size_x",
+                      "size_y"
+                    ]
+                  },
+                  "maxItems": 255
+                },
+                "x_min": {
+                  "type": "integer",
+                  "description": "Smallest X of the group.",
+                  "x-unit": "mm",
+                  "x-plc": "asLayerData[].asPlacing[].i16MiddleX = trunc((x_min + x_max) / 2)",
+                  "minimum": -32767,
+                  "maximum": 32767
+                },
+                "y_min": {
+                  "type": "integer",
+                  "description": "Smallest Y of the group.",
+                  "x-unit": "mm",
+                  "x-plc": "asLayerData[].asPlacing[].i16MiddleY = trunc((y_min + y_max) / 2)",
+                  "minimum": -32767,
+                  "maximum": 32767
+                },
+                "x_max": {
+                  "type": "integer",
+                  "description": "Largest X of the group.",
+                  "x-unit": "mm",
+                  "minimum": -32767,
+                  "maximum": 32767
+                },
+                "y_max": {
+                  "type": "integer",
+                  "description": "Largest Y of the group.",
+                  "x-unit": "mm",
+                  "minimum": -32767,
+                  "maximum": 32767
+                },
+                "x_middle": {
+                  "type": "number",
+                  "description": "Middle of the group along X, .0 or .5 (for people; the PLC gets the middle of x_min and x_max).",
+                  "x-unit": "mm",
+                  "multipleOf": 0.5
+                },
+                "y_middle": {
+                  "type": "number",
+                  "description": "Middle of the group along Y, .0 or .5 (for people).",
+                  "x-unit": "mm",
+                  "multipleOf": 0.5
+                },
+                "size_x": {
+                  "type": "integer",
+                  "description": "Extent of the group along X.",
+                  "x-unit": "mm",
+                  "x-plc": "asLayerData[].asPlacing[].u16Length (place orientation 0, 180) or u16Width (90, 270)",
+                  "minimum": 0,
+                  "maximum": 32767
+                },
+                "size_y": {
+                  "type": "integer",
+                  "description": "Extent of the group along Y.",
+                  "x-unit": "mm",
+                  "x-plc": "asLayerData[].asPlacing[].u16Width (place orientation 0, 180) or u16Length (90, 270)",
+                  "minimum": 0,
+                  "maximum": 32767
+                },
+                "gripper_pick_orientation": {
+                  "type": "integer",
+                  "description": "Orientation of the gripper at the pick, in the infeed's frame: 0 or 180.",
+                  "x-unit": "deg",
+                  "x-plc": "asLayerData[].asPlacing[].i16GripperPickRotation",
+                  "enum": [
+                    0,
+                    180
+                  ]
+                },
+                "gripper_place_orientation": {
+                  "type": "integer",
+                  "description": "Orientation of the gripper at the place: the direction its face 0 looks, 0, 90, 180 or 270.",
+                  "x-unit": "deg",
+                  "x-plc": "asLayerData[].asPlacing[].i16GripperPlaceRotation",
+                  "enum": [
+                    0,
+                    90,
+                    180,
+                    270
+                  ]
+                },
+                "placing_direction": {
+                  "type": "integer",
+                  "description": "Direction the group travels in its last approach, in the pallet frame: 0 up, 45 up-left, 90 left, 135 down-left, 180 down, 225 down-right, 270 right, 315 up-right (the drawing); 900 straight down from above; 999 not assigned.",
+                  "x-unit": "deg",
+                  "x-plc": "asLayerData[].asPlacing[].i16PlacingDirection",
+                  "enum": [
+                    0,
+                    45,
+                    90,
+                    135,
+                    180,
+                    225,
+                    270,
+                    315,
+                    900,
+                    999
+                  ]
+                },
+                "gripper_align": {
+                  "type": "integer",
+                  "description": "Where the group sits along the gripper: 0 flush with end 0, 180 flush with end 180, 900 centred.",
+                  "x-plc": "asLayerData[].asPlacing[].i16GripperAlign",
+                  "enum": [
+                    0,
+                    180,
+                    900
+                  ]
+                },
+                "gripper_open_side": {
+                  "type": "integer",
+                  "description": "Side of the gripper whose jaw opens, in the gripper's frame: 90 or 270; the group touches the opposite jaw. 900 a gripper without an open side; 999 not assigned.",
+                  "x-unit": "deg",
+                  "x-plc": "asLayerData[].asPlacing[].i16GripperOpenSide",
+                  "enum": [
+                    90,
+                    270,
+                    900,
+                    999
+                  ]
+                },
+                "products_at_pick": {
+                  "type": "array",
+                  "description": "The products in the order they reach the infeed stop, each with its orientation there; at least one (an empty first slot ends the layer in the PLC).",
+                  "items": {
+                    "type": "object",
+                    "description": "One product at the pick.",
+                    "properties": {
+                      "product_id": {
+                        "type": "integer",
+                        "description": "The product, by `products[].id`.",
+                        "minimum": 0
+                      },
+                      "orientation": {
+                        "type": "integer",
+                        "description": "Its orientation at the pick: 0, 90, 180 or 270.",
+                        "x-unit": "deg",
+                        "x-plc": "asLayerData[].asPlacing[].ai16BoxPickRotation[] (no product: 999)",
+                        "enum": [
+                          0,
+                          90,
+                          180,
+                          270
+                        ]
+                      }
+                    },
+                    "required": [
+                      "product_id",
+                      "orientation"
+                    ]
+                  },
+                  "minItems": 1,
+                  "maxItems": 255
+                }
+              },
+              "required": [
+                "placing_order",
+                "products",
+                "x_min",
+                "y_min",
+                "x_max",
+                "y_max",
+                "size_x",
+                "size_y",
+                "gripper_pick_orientation",
+                "gripper_place_orientation",
+                "placing_direction",
+                "gripper_align",
+                "gripper_open_side",
+                "products_at_pick"
+              ]
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "id",
+          "moves"
+        ]
+      }
+    },
+    "gripper": {
+      "type": "object",
+      "description": "The gripper of the station in force, a copy of `x-palletdesigner.station` for readers of the core; absent when the project was made without station settings.",
+      "properties": {
+        "length": {
+          "type": "integer",
+          "description": "Outline of the open gripper from end 0 to end 180.",
+          "x-unit": "mm",
+          "minimum": 0
+        },
+        "width": {
+          "type": "integer",
+          "description": "Outline of the open gripper from side 90 to side 270.",
+          "x-unit": "mm",
+          "minimum": 0
+        },
+        "outline_relevant": {
+          "type": "boolean",
+          "description": "The outline is checked; false for a gripper from above."
+        },
+        "group_length_min": {
+          "type": "integer",
+          "description": "Shortest group along the gripper.",
+          "x-unit": "mm",
+          "minimum": 0
+        },
+        "group_length_max": {
+          "type": "integer",
+          "description": "Longest group along the gripper.",
+          "x-unit": "mm",
+          "minimum": 0
+        },
+        "group_width_min": {
+          "type": "integer",
+          "description": "Narrowest group across the gripper.",
+          "x-unit": "mm",
+          "minimum": 0
+        },
+        "group_width_max": {
+          "type": "integer",
+          "description": "Widest group across the gripper.",
+          "x-unit": "mm",
+          "minimum": 0
+        },
+        "approach_clearance": {
+          "type": "integer",
+          "description": "Free space beside a group for the approach.",
+          "x-unit": "mm",
+          "minimum": 0
+        },
+        "allowed_pick_orientation": {
+          "type": "array",
+          "description": "Gripper orientations allowed at the pick.",
+          "items": {
+            "type": "integer",
+            "description": "One of them.",
+            "x-unit": "deg",
+            "enum": [
+              0,
+              90,
+              180,
+              270
+            ]
+          },
+          "uniqueItems": true
+        },
+        "allowed_place_orientation": {
+          "type": "array",
+          "description": "Gripper orientations allowed at the place.",
+          "items": {
+            "type": "integer",
+            "description": "One of them.",
+            "x-unit": "deg",
+            "enum": [
+              0,
+              90,
+              180,
+              270
+            ]
+          },
+          "uniqueItems": true
+        },
+        "allowed_open_side": {
+          "type": "array",
+          "description": "Gripper sides that may open.",
+          "items": {
+            "type": "integer",
+            "description": "One of them.",
+            "x-unit": "deg",
+            "enum": [
+              90,
+              270
+            ]
+          },
+          "uniqueItems": true
+        },
+        "allowed_align": {
+          "type": "array",
+          "description": "Alignments allowed: one of [0, 180, 900], [180], [0], [0, 180], [900].",
+          "items": {
+            "type": "integer",
+            "description": "One of them.",
+            "enum": [
+              0,
+              180,
+              900
+            ]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "description": "The infeed the products come from; absent when the project was made without station settings.",
+      "properties": {
+        "stop": {
+          "type": "integer",
+          "description": "Direction of the infeed's stop in the infeed's frame (the program writes 180).",
+          "x-unit": "deg",
+          "enum": [
+            0,
+            90,
+            180,
+            270
+          ]
+        },
+        "allowed_product_orientation": {
+          "type": "array",
+          "description": "Product orientations allowed at the infeed.",
+          "items": {
+            "type": "integer",
+            "description": "One of them.",
+            "x-unit": "deg",
+            "enum": [
+              0,
+              90,
+              180,
+              270
+            ]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "description": "Sizes of the controller's recipe structure (the station settings in force); absent when the project was made without station settings.",
+      "properties": {
+        "types": {
+          "type": "integer",
+          "description": "Product types a recipe holds.",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "layers": {
+          "type": "integer",
+          "description": "Layers of the stack.",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "layouts": {
+          "type": "integer",
+          "description": "Unique layers.",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "moves": {
+          "type": "integer",
+          "description": "Moves of one layer.",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "products": {
+          "type": "integer",
+          "description": "Products of one move.",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "name_length": {
+          "type": "integer",
+          "description": "Longest product and pallet name (characters).",
+          "minimum": 0
+        },
+        "recipe_name_length": {
+          "type": "integer",
+          "description": "Longest recipe name (characters, the `.json` included).",
+          "minimum": 0
+        }
+      }
+    },
+    "x-palletdesigner": {
+      "type": "object",
+      "description": "What only PalletDesigner needs, in one block a reader from outside may skip.",
+      "properties": {
+        "project_version": {
+          "type": "integer",
+          "description": "The program's generation of the file.",
+          "const": 2
+        },
+        "settings_type": {
+          "type": "string",
+          "description": "The station settings file the product names (Station tab)."
+        },
+        "station": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "The station settings in force, in full (the program's 2.0 names), or null when the project was made without them."
+        },
+        "order": {
+          "type": "object",
+          "description": "Only in a pallet copy inside an order (Order tab); the panel's Order module reads it, its Recipe module refuses a file that has it.",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The order the copy belongs to."
+            },
+            "frame_type": {
+              "type": "string",
+              "description": "Frame of the order the copy stands in.",
+              "enum": [
+                "input",
+                "output"
+              ]
+            },
+            "location": {
+              "type": "integer",
+              "description": "Input location of the pallet.",
+              "x-plc": "sSummary.i8Location (Order module)",
+              "minimum": 0
+            },
+            "location_list": {
+              "type": "array",
+              "description": "Frames of the order.",
+              "items": {
+                "type": "string",
+                "description": "A frame: in1..in3, out1..out3."
+              }
+            },
+            "input_location": {
+              "type": "object",
+              "description": "Input frame of each product type, by type id.",
+              "propertyNames": {
+                "pattern": "^[1-9][0-9]*$"
+              },
+              "additionalProperties": {
+                "type": "integer",
+                "description": "An input frame.",
+                "x-plc": "sProductData.asTypeData[n].i8Location (Order module)",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "layouts": {
+          "type": "array",
+          "description": "The program's part of each layout, in the order of `layouts`.",
+          "items": {
+            "type": "object",
+            "description": "The program's part of one layout.",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "The layout, by `layouts[].id`.",
+                "minimum": 1
+              },
+              "file_name": {
+                "type": "string",
+                "description": "The placing file, with its sub-folder of `placing/` (`Examples/x.json`); opening the project reads it."
+              },
+              "file_path": {
+                "type": "string",
+                "description": "The same as a Windows path below `data\\placing\\` (informational)."
+              },
+              "settings": {
+                "type": "object",
+                "description": "What the placing was computed with (`poke_out_allowance`: the overhang measured, mm).",
+                "properties": {}
+              },
+              "obstacles": {
+                "type": "array",
+                "description": "The placing's own obstacles; only when it has the list.",
+                "items": {
+                  "type": "object",
+                  "description": "A rectangle the robot must keep out of, in the pallet frame.",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "Number of the obstacle."
+                    },
+                    "x": {
+                      "type": "integer",
+                      "description": "Smallest X.",
+                      "x-unit": "mm"
+                    },
+                    "y": {
+                      "type": "integer",
+                      "description": "Smallest Y.",
+                      "x-unit": "mm"
+                    },
+                    "size_x": {
+                      "type": "integer",
+                      "description": "Extent along X.",
+                      "x-unit": "mm",
+                      "minimum": 0
+                    },
+                    "size_y": {
+                      "type": "integer",
+                      "description": "Extent along Y.",
+                      "x-unit": "mm",
+                      "minimum": 0
+                    }
+                  },
+                  "required": [
+                    "x",
+                    "y",
+                    "size_x",
+                    "size_y"
+                  ]
+                }
+              },
+              "placing_count": {
+                "type": "integer",
+                "description": "Moves of the layer.",
+                "minimum": 0
+              },
+              "greedy_group_count": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Groups of the simplest division of the layer; null for a manual placing.",
+                "minimum": 0
+              },
+              "best_solution": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "Which start the algorithm chose (for people); null for a manual placing."
+              },
+              "moves": {
+                "type": "array",
+                "description": "Per move, parallel to `layouts[].moves`.",
+                "items": {
+                  "type": "object",
+                  "description": "The program's bookkeeping of one move.",
+                  "properties": {
+                    "group_id": {
+                      "type": "string",
+                      "description": "Name of the group in the algorithm's result."
+                    },
+                    "row_axis": {
+                      "type": "string",
+                      "description": "Axis the row of products runs along: `x`, `y`, or `any` (one product the gripper may take either way).",
+                      "enum": [
+                        "any",
+                        "x",
+                        "y"
+                      ]
+                    },
+                    "product_ids": {
+                      "type": "array",
+                      "description": "The products of the move, by `products[].id`.",
+                      "items": {
+                        "type": "integer",
+                        "description": "A product.",
+                        "minimum": 0
+                      }
+                    },
+                    "position_index": {
+                      "type": "integer",
+                      "description": "Index into the engine's list of gripper positions.",
+                      "minimum": 0
+                    },
+                    "gripper_rect": {
+                      "type": "array",
+                      "description": "The open gripper's footprint at the place: x, y, size_x, size_y (may be negative or .5).",
+                      "items": {
+                        "type": "number",
+                        "description": "A coordinate.",
+                        "x-unit": "mm"
+                      },
+                      "minItems": 4,
+                      "maxItems": 4
+                    }
+                  }
+                }
+              }
+            },
+            "required": [
+              "id",
+              "file_name"
+            ]
+          }
+        }
+      },
+      "required": [
+        "project_version"
+      ]
+    }
+  },
+  "required": [
+    "format",
+    "header",
+    "pallet",
+    "product",
+    "summary",
+    "product_types",
+    "slip_sheet_types",
+    "stack",
+    "layouts"
+  ],
+  "patternProperties": {
+    "^x-": {}
+  },
+  "additionalProperties": false
+}
